@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
+
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
@@ -22,7 +23,8 @@ public class FacultyController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Faculty> remove(@PathVariable long id){
-        Faculty removedFaculty = facultyService.remove(id);
+        Faculty removedFaculty = facultyService.get(id);
+        facultyService.remove(id);
         if(removedFaculty == null){
             return ResponseEntity.badRequest().build();
         }

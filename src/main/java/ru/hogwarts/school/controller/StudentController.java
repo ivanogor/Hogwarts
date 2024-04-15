@@ -6,6 +6,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 
+
 @RestController
 @RequestMapping("/student")
 public class StudentController {
@@ -23,7 +24,8 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Student> remove(@PathVariable long id){
-        Student removedStudent = studentService.remove(id);
+        Student removedStudent = studentService.get(id);
+        studentService.remove(id);
         if(removedStudent == null){
             return ResponseEntity.badRequest().build();
         }
