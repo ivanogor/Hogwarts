@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -15,7 +14,7 @@ import lombok.*;
 public class Student {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
     private String name;
     private int age;
 }
