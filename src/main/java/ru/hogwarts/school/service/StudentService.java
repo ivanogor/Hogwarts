@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
+import java.util.Collection;
+
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
@@ -22,10 +24,14 @@ public class StudentService {
     }
 
     public Student get(long id){
-        return studentRepository.getReferenceById(id);
+        return studentRepository.findById(id).get();
     }
 
     public Student edit(Student student){
         return studentRepository.save(student);
+    }
+
+    public Collection<Student> getAllStudents(){
+        return studentRepository.findAll();
     }
 }
