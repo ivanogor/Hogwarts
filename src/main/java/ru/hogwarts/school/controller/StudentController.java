@@ -19,20 +19,20 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<Student> add(@RequestBody Student student){
-        Student addedStudent = studentService.add(student);
+        Student addedStudent = studentService.save(student);
         return ResponseEntity.ok(addedStudent);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity remove(@PathVariable long id){
-        studentService.remove(id);
+        studentService.deleteById(id);
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> get(@PathVariable long id){
-        Student student = studentService.get(id);
+        Student student = studentService.findById(id);
 
         if(student == null){
             return ResponseEntity.badRequest().build();
@@ -53,7 +53,16 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> getAllStudents(){
-        return ResponseEntity.ok(studentService.getAllStudents());
+    public ResponseEntity<Collection<Student>> findAllStudents(@RequestParam(required = false) Integer lowLimit,
+                                                               @RequestParam(required = false) Integer highLimit){
+        if(lowLimit != null && highLimit != null) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(lowLimit, highLimit));
+        }
+        return ResponseEntity.ok(studentService.findAllStudents());
+    }
+
+    @GetMapping("find-faculty")
+    public ResponseEntity<Long> findFacultyOfStudent(@RequestParam long studentId){
+        return ResponseEntity.ok(studentService.findFacultyId(studentId));
     }
 }

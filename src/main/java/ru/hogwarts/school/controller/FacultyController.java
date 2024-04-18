@@ -20,20 +20,20 @@ public class FacultyController {
 
     @PostMapping
     public ResponseEntity<Faculty> add(@RequestBody Faculty faculty){
-        Faculty addedFaculty = facultyService.add(faculty);
+        Faculty addedFaculty = facultyService.save(faculty);
         return ResponseEntity.ok(addedFaculty);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity remove(@PathVariable long id){
-        facultyService.remove(id);
+        facultyService.deleteById(id);
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Faculty> get(@PathVariable long id){
-        Faculty faculty = facultyService.get(id);
+        Faculty faculty = facultyService.findById(id);
         if(faculty == null){
             return ResponseEntity.badRequest().build();
         }
@@ -53,7 +53,25 @@ public class FacultyController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> getAllStudents(){
-        return ResponseEntity.ok(facultyService.getAllFaculties());
+    public ResponseEntity getAllFaculties(@RequestParam(required = false) String name,
+                                         @RequestParam(required = false) String color){
+        if(checkParam(name)){
+            return ResponseEntity.ok(facultyService.findFacultiesByNameIgnoreCase(name));
+        }
+        if(checkParam(color)){
+            return ResponseEntity.ok(facultyService.findFacultiesByColorIgnoreCase(color));
+        }
+
+        return ResponseEntity.ok(facultyService.findAllFaculties());
     }
+
+    @GetMapping("get-students")
+    public ResponseEntity<Collection<Student>> getStudents(@RequestParam long facultyId){
+        return ResponseEntity.ok(facultyService.findStudents(facultyId));
+    }
+
+    private boolean checkParam(String param){
+        return param != null && param.isBlank();
+    }
+
 }

@@ -15,15 +15,15 @@ public class StudentService {
     }
 
 
-    public Student add(Student student){
+    public Student save(Student student){
         return studentRepository.save(student);
     }
 
-    public void remove(long id){
+    public void deleteById(long id){
         studentRepository.deleteById(id);
     }
 
-    public Student get(long id){
+    public Student findById(long id){
         return studentRepository.findById(id).get();
     }
 
@@ -31,7 +31,16 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Collection<Student> getAllStudents(){
+    public Collection<Student> findAllStudents(){
         return studentRepository.findAll();
+    }
+
+    public Collection<Student> findByAgeBetween(int lowLimit, int highLimit) {
+        return studentRepository.findByAgeBetween(lowLimit, highLimit);
+    }
+    public long findFacultyId(long studentId){
+        return studentRepository.findById(studentId)
+                .map(student -> student.getFaculty().getId()
+                ).orElseThrow();
     }
 }
