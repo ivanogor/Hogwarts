@@ -6,13 +6,9 @@ import lombok.*;
 
 import java.util.Collection;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 @Entity
+@NoArgsConstructor
 @JsonIgnoreProperties(value = {"students"})
 public class Faculty {
     @Id

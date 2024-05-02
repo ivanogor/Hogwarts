@@ -4,13 +4,10 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
-@NoArgsConstructor
-@Getter
+@Data
 @Setter
-@EqualsAndHashCode
-@ToString
 @Entity
-
+@NoArgsConstructor
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
