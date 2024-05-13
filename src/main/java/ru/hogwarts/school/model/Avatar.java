@@ -1,5 +1,6 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Avatar {
     private long fileSize;
     private String mediaType;
 
+    @JsonIgnore
     @Column(columnDefinition = "oid")
     private byte [] data;
 
