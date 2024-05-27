@@ -53,7 +53,7 @@ public class FacultyController {
     }
 
     @GetMapping
-    public ResponseEntity getAllFaculties(@RequestParam(required = false) String name,
+    public ResponseEntity<Collection<Faculty>> getAllFaculties(@RequestParam(required = false) String name,
                                          @RequestParam(required = false) String color){
         if(checkParam(name)){
             return ResponseEntity.ok(facultyService.findFacultiesByNameIgnoreCase(name));
@@ -70,6 +70,10 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.findStudents(facultyId));
     }
 
+    @GetMapping("get-longest-name")
+    public ResponseEntity<String> getLongestFacultyName(){
+        return ResponseEntity.ok(facultyService.getLongestFacultyName());
+    }
     private boolean checkParam(String param){
         return param != null && param.isBlank();
     }
