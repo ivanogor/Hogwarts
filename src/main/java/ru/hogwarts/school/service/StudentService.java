@@ -129,4 +129,39 @@ public class StudentService {
 
         return allStudents.parallelStream().mapToInt(Student::getAge).average().orElse(0.0);
     }
+
+    public void printParallel() {
+        List<Student> students = studentRepository.findAll();
+
+        System.out.println(students.get(1));
+        System.out.println(students.get(2));
+
+        new Thread(() -> {
+            System.out.println(students.get(3));
+            System.out.println(students.get(4));
+        });
+
+        new Thread(() -> {
+            System.out.println(students.get(5));
+            System.out.println(students.get(6));
+        });
+
+    }
+
+    public synchronized void printSynchronized() {
+        List<Student> students = studentRepository.findAll();
+
+        System.out.println(students.get(1));
+        System.out.println(students.get(2));
+
+        new Thread(() -> {
+            System.out.println(students.get(3));
+            System.out.println(students.get(4));
+        });
+
+        new Thread(() -> {
+            System.out.println(students.get(5));
+            System.out.println(students.get(6));
+        });
+    }
 }
