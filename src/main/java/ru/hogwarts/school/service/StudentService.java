@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 
+import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -133,35 +134,51 @@ public class StudentService {
     public void printParallel() {
         List<Student> students = studentRepository.findAll();
 
-        System.out.println(students.get(1));
-        System.out.println(students.get(2));
+        if(students.size() >= 6){
 
-        new Thread(() -> {
-            System.out.println(students.get(3));
-            System.out.println(students.get(4));
-        });
 
-        new Thread(() -> {
-            System.out.println(students.get(5));
-            System.out.println(students.get(6));
-        });
+            Thread thread1 = new Thread(() -> {
+                logger.info(students.get(3).toString());
+                logger.info(students.get(4).toString());
+            });
 
+            Thread thread2 = new Thread(() -> {
+                logger.info(students.get(5).toString());
+                logger.info(students.get(6).toString());
+            });
+
+            thread2.start();
+            thread1.start();
+
+            logger.info(students.get(1).toString());
+            logger.info(students.get(2).toString());
+        }
     }
 
     public synchronized void printSynchronized() {
         List<Student> students = studentRepository.findAll();
 
-        System.out.println(students.get(1));
-        System.out.println(students.get(2));
+        if(students.size() >= 6){
 
-        new Thread(() -> {
-            System.out.println(students.get(3));
-            System.out.println(students.get(4));
-        });
+            Thread thread1 = new Thread(() -> {
+                printStudent(students.get(3));
+                printStudent(students.get(4));
+            });
 
-        new Thread(() -> {
-            System.out.println(students.get(5));
-            System.out.println(students.get(6));
-        });
+            Thread thread2 = new Thread(() -> {
+                printStudent(students.get(5));
+                printStudent(students.get(6));
+            });
+
+            thread1.start();
+            thread2.start();
+
+            printStudent(students.get(1));
+            printStudent(students.get(2));
+        }
+    }
+
+    private synchronized void printStudent(Student student) {
+        logger.info(student.toString());
     }
 }
