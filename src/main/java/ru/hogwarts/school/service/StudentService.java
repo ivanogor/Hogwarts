@@ -155,7 +155,7 @@ public class StudentService {
         }
     }
 
-    public synchronized void printSynchronized() {
+    public void printSynchronized() {
         List<Student> students = studentRepository.findAll();
 
         if(students.size() >= 6){
