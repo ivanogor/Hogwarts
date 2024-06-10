@@ -1,37 +1,87 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class FacultyService {
-    private final Map<Long, Faculty> faculties = new HashMap<>();
+    private final FacultyRepository facultyRepository;
+    private final Logger logger = LoggerFactory.getLogger(FacultyService.class);
 
-    private long idCounter = 1L;
-
-    public Faculty add(Faculty faculty){
-        faculty.setId(idCounter);
-        faculties.put(idCounter++, faculty);
-        return faculty;
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
 
-    public Faculty remove(long id){
-        return faculties.remove(id);
+    public Faculty save(Faculty faculty){
+        logger.info("Faculty created.");
+        return facultyRepository.save(faculty);
     }
 
-    public Faculty get(long id){
-        return faculties.get(id);
+    public void deleteById(long id){
+        if(facultyRepository.findById(id).isPresent()){
+            logger.info("Faculty deleted.");
+        }
+        else {
+            logger.error("Faculty not found.");
+            throw new FacultyNotFoundException();
+        }
+        facultyRepository.deleteById(id);
+    }
+
+    public Faculty findById(long id){
+        Optional<Faculty> foundFaculty = facultyRepository.findById(id);
+        if (foundFaculty.isPresent()){
+            logger.info("Faculty found.");
+            return foundFaculty.get();
+        }
+        else {
+            logger.error("Faculty not found.");
+            throw new FacultyNotFoundException();
+        }
     }
 
     public Faculty edit(Faculty faculty){
-        if (!faculties.containsKey(faculty.getId())) {
-            return null;
+        if (facultyRepository.findById(faculty.getId()).isPresent()){
+            logger.info("Faculty edited.");
+            return facultyRepository.save(faculty);
         }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        else{
+            logger.error("Faculty not found");
+            throw new FacultyNotFoundException();
+        }
     }
 
+    public Collection<Faculty> findAllFaculties(){
+        logger.info("Faculties found.");
+        return facultyRepository.findAll();
+    }
+    public Collection<Faculty> findFacultiesByColorIgnoreCase(String color){
+        logger.info("Faculty found.");
+        return facultyRepository.findFacultiesByColorIgnoreCase(color);
+    }
+    public Collection<Faculty> findFacultiesByNameIgnoreCase(String name){
+        logger.info("Faculties found.");
+        return facultyRepository.findFacultiesByNameIgnoreCase(name);
+    }
+
+    public Collection<Student> findStudents(long facultyId){
+        logger.info("Students by faculty found.");
+        return facultyRepository.findById(facultyId).get().getStudents();
+    }
+
+    public String getLongestFacultyName(){
+        List<Faculty> allFaculty = facultyRepository.findAll();
+        return allFaculty.parallelStream().max(Comparator.comparing(faculty -> faculty.getName().length())).get().getName();
+    }
 }

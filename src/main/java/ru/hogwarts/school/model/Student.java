@@ -1,19 +1,21 @@
 package ru.hogwarts.school.model;
 
+import jakarta.persistence.*;
+
 import lombok.*;
 
-@NoArgsConstructor
-@Getter
+@Data
 @Setter
-@EqualsAndHashCode
-@ToString
+@Entity
+@NoArgsConstructor
 public class Student {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String name;
-    private int age;
+    private Integer age;
 
-    public Student(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
 }

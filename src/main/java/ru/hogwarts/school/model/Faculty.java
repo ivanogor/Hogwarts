@@ -1,19 +1,22 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Collection;
+
+@Data
+@Entity
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@JsonIgnoreProperties(value = {"students"})
 public class Faculty {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String name;
     private String color;
 
-    public Faculty(String name, String color) {
-        this.name = name;
-        this.color = color;
-    }
+    @OneToMany(mappedBy = "faculty")
+    private Collection<Student> students;
 }
